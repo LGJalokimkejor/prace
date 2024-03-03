@@ -1,0 +1,213 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+using namespace std;
+
+int bs,rs,px,py,i,j,p,n,x,y, r[10][10], b[10][10], g[10][10];
+char qm=34;
+
+int draw(){
+    cout<<"\n pozostale wrogie statki: "<<rs<<"\n";
+    for(i=0; i<10;i++){
+        for(j=0; j<10;j++){
+            if(g[j][i]>=0){
+                cout<<" "<<g[j][i];
+            }else{
+                cout<<g[j][i];
+            }
+        }cout<<"\n";
+    }cout<<"---------------------\n";
+    for(i=0; i<10;i++){
+        for(j=0; j<10;j++){
+            if(b[j][i]>=0){
+                cout<<" "<<b[j][i];
+            }else{
+                cout<<b[j][i];
+            }
+        }cout<<"\n";
+    }cout<<"pozostale przyjazne statki: "<<bs<<"\n";
+    return 0;
+}
+
+int leg(){
+    cout<<"0 puste/nieznane pole \t 1 nie zniszczony statek \t -1 zniszczony statek \t -2 chybiony strzal";
+    return 0;
+}
+
+int pTurn(){
+    p=0;while(p<1){
+        cout<<"\n 1-strzel \t 2-wyswietl legende \t 3-wyswietl mape \n";
+        cin>>n;
+        if(n==2){
+            leg();
+        }else if(n==1){
+            p++;
+        }else if(n==3){
+            draw();
+        }else{
+            cout<<"czytac potrafisz?";
+        }
+    }
+
+
+    i=0;while(i<1){
+        cout<<"\n podaj koordynaty(od 1 do 10)(X i Y)(oddzielone spacja) w ktore chcesz strzelic: ";
+        cin>>px>>py;
+        px--;py--;
+        if(r[px][py]!=-1&&r[px][py]!=-2){
+            if(r[px][py]==1){
+                cout<<"\n"<<qm<<"weszlo jak w maslo, przeciwnik oberwal"<<qm;
+                r[px][py]=-1;
+                g[px][py]=-1;
+                rs--;
+            }else if(r[px][py]!=1){
+                cout<<"\n skill issue";
+                r[px][py]=-2;
+                g[px][py]=-2;
+            }
+            i++;
+        }else{
+            cout<<"\n w podana pozycje juz strzelono";
+        }
+        cout<<"\n";
+    }
+    return 0;
+}
+
+int asTurn(){
+    srand(time(NULL));
+    i=0;while(i<1){
+        x=rand()%10;
+        y=rand()%10;
+        if(b[x][y]!=-1&&b[x][y]!=-2){
+            if(b[x][y]==1){
+                b[x][y]=-1;
+                bs--;
+            }else if(b[x][y]==0){
+                b[x][y]=-2;
+            }
+        i++;
+        }
+    }
+    return 0;
+}
+
+int main()
+{
+    bs=8;rs=8;
+    for(i=0; i<10;i++){
+        for(j=0; j<10;j++){
+            r[i][j]=0;
+            b[i][j]=0;
+            g[i][j]=0;
+        }
+    }
+    srand(time(NULL));
+    i=0;while(i<rs){
+        x=rand()%10;
+        y=rand()%10;
+         if(r[x][y]!=1 && r[x-1][y-1]!=1 && r[x][y-1]!=1 && r[x+1][y-1]!=1 && r[x-1][y]!=1 && r[x+1][y]!=1 && r[x-1][y+1]!=1 && r[x][y+1]!=1 && r[x+1][y+1]!=1){
+            r[x][y]=1;
+            i++;
+        }
+    }
+
+
+    draw();
+
+    i=0; while(i<bs){
+        px=0;
+        py=0;
+        cout<<"podaj koordynaty(od 1 do 10)(X i Y)(oddzielone spacja), na ktorych chcesz postawic swoj "<<i+1<<" statek: ";
+        cin>>px>>py;
+        px--;py--;
+        if(px==0){
+            if(py==0){
+                if(b[px][py]!=1 && b[px+1][py]!=1 && b[px][py+1]!=1 && b[px+1][py+1]!=1){
+                    b[px][py]=1;
+                    i++;
+                }else{
+                    cout<<"\n podana pozycja jest niedostepna";
+                }
+            }else if(py==9){
+                if(b[px][py]!=1 && b[px][py-1]!=1 && b[px+1][py-1]!=1 && b[px+1][py]!=1){
+                    b[px][py]=1;
+                    i++;
+                }else{
+                    cout<<"\n podana pozycja jest niedostepna";
+                }
+            }else{
+                if(b[px][py]!=1 && b[px][py-1]!=1 && b[px+1][py-1]!=1 && b[px+1][py]!=1 && b[px][py+1]!=1 && b[px+1][py+1]!=1){
+                    b[px][py]=1;
+                    i++;
+                }else{
+                    cout<<"\n podana pozycja jest niedostepna";
+                }
+            }
+        }else if(px==9){
+            if(py==0){
+                if(b[px][py]!=1 && b[px-1][py]!=1 && b[px-1][py+1]!=1 && b[px][py+1]!=1){
+                    b[px][py]=1;
+                    i++;
+                }else{
+                    cout<<"\n podana pozycja jest niedostepna";
+                }
+            }else if(py==9){
+                if(b[px][py]!=1 && b[px-1][py-1]!=1 && b[px][py-1]!=1 && b[px-1][py]!=1){
+                    b[px][py]=1;
+                    i++;
+                }else{
+                    cout<<"\n podana pozycja jest niedostepna";
+                }
+            }else{
+                if(b[px][py]!=1 && b[px-1][py-1]!=1 && b[px][py-1]!=1 && b[px-1][py]!=1 && b[px-1][py+1]!=1 && b[px][py+1]!=1){
+                    b[px][py]=1;
+                    i++;
+                }else{
+                    cout<<"\n podana pozycja jest niedostepna";
+                }
+            }
+        }else if(py==0){
+            if(b[px][py]!=1 && b[px-1][py]!=1 && b[px+1][py]!=1 && b[px-1][py+1]!=1 && b[px][py+1]!=1 && b[px+1][py+1]!=1){
+                b[px][py]=1;
+                i++;
+            }else{
+                cout<<"\n podana pozycja jest niedostepna";
+            }
+        }else if(py==9){
+            if(b[px][py]!=1 && b[px-1][py-1]!=1 && b[px][py-1]!=1 && b[px+1][py-1]!=1 && b[px-1][py]!=1 && b[px+1][py]!=1){
+                b[px][py]=1;
+                i++;
+            }else{
+                cout<<"\n podana pozycja jest niedostepna";
+            }
+        }else{
+            if(b[px][py]!=1 && b[px-1][py-1]!=1 && b[px][py-1]!=1 && b[px+1][py-1]!=1 && b[px-1][py]!=1 && b[px+1][py]!=1 && b[px-1][py+1]!=1 && b[px][py+1]!=1 && b[px+1][py+1]!=1){
+                b[px][py]=1;
+                i++;
+            }else{
+                cout<<"\n podana pozycja jest niedostepna";
+            }
+        }
+
+
+        cout<<"\n";
+    }
+
+    leg();
+    draw();
+
+    while(bs>0&&rs>0){
+        pTurn();
+        asTurn();
+        draw();
+    }
+    if(rs==0){
+        cout<<"\n \t wygrales!!1!!!11!11!! \n";
+    }else if(bs==0){
+        cout<<"przegrales! \n latwo z gosciem";
+    }
+
+    return 0;
+}
